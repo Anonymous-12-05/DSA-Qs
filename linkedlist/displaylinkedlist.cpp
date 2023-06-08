@@ -5,7 +5,7 @@ struct Node
     int data;
     struct Node *next;
     /* data */
-}*first;
+}*first=NULL,*second=NULL,*third=NULL;
 void create(int A[],int n){
     int i;
     struct Node *t,*last;
@@ -21,7 +21,21 @@ void create(int A[],int n){
         last=t;
     }
 }
-
+void create2(int A[],int n){
+    int i;
+    struct Node *t,*last;
+    second=new Node;
+    second->data=A[0];
+    second->next=NULL;
+    last=second;
+    for(i=1;i<n;i++){
+        t=new Node;
+        t->data=A[i];
+        t->next=NULL;
+        last->next=t;
+        last=t;
+    }
+}
 void display(struct Node *p){
     while(p!=NULL){
         cout<<p->data<<" ";
@@ -190,10 +204,125 @@ int deletenode(int x,Node *p){
      return n;
 
 }
+void removeDuplicates(Node *p){
+    Node *q=p->next;
+    while(q!=NULL){
+        if(p->data!=q->data){
+            p=q;
+            q=q->next;
+        }
+        else{
+            p->next=q->next;
+            delete q;
+            q=p->next;
+        }
+    }
+}
+void reverseArray(Node *p){
+    int *A,i=0;
+    A=new int[count(p)];
+    Node *q;
+    q=p;
+    while(q!=NULL){
+        A[i]=q->data;
+        q=q->next;
+        i++;
+    }
+    q=p;
+    i--;
+    while(q!=NULL){
+        q->data=A[i];
+        q=q->next;
+        i--;
+    }
+}
+void reverseSlidingPointer(Node *p){
+    Node *q=NULL,*r=NULL;
+    while(p!=NULL){
+        r=q;
+        q=p;
+        p=p->next;
+        q->next=r;
+    }
+    first=q;
 
+}
+void reverseRec(Node *q,Node *p){
+    if(p){
+        reverseRec(p,p->next);
+        p->next=q;
+    }
+    else{
+        first=q;
+    }
+}
+void concatenate(Node *p,Node *q){
+    third=p;
+    while(p->next!=NULL){
+        p=p->next;
+    }
+    p->next=q;
+}
+void MergeLL(Node *p,Node *q){
+    Node* last;
+    if(p->data<q->data){
+        third=last=p;
+        p=p->next;
+        third->next=NULL;
+    }
+    else{
+        third=last=q;
+        q=q->next;
+        third->next=NULL;
+    }
+    while(p && q){
+         if(p->data<q->data){
+            last->next=p;
+            last=p;
+            p=p->next;
+            last->next=NULL;
+         }
+         else{
+            last->next=q;
+            last=q; 
+            q=q->next;
+            last->next=NULL;
+         }
+    }
+    if(p){last->next=p;}
+    if(q){last->next=q;}
+
+}
+int loop(Node *f){
+    Node *p,*q;
+    p=q=f;
+    do{
+        p=p->next;
+        q=q->next;
+        if(q!=NULL){
+            q=q->next;
+
+        }
+        else{
+            q=NULL;
+        }
+    }while(p && q && p!=q);
+    return p==q;
+}
 int main(){
-    int A[5]={3,5,7,10,15};
+    Node *t1,*t2;
+
+    int A[5]={10,20,30,40,50};
     create(A,5);
+    int B[4]={2,12,35,44};
+    create2(B,4);
+    MergeLL(second,first);
+    display(third);
+    t1=first->next->next;
+    t2=first->next->next->next->next;
+    t2->next=t1;
+    cout<<loop(first)<<endl;
+
     display(first);
     cout<<endl;
     recDisplay(first);
@@ -206,12 +335,14 @@ int main(){
     cout<<recursivemax(first)<<endl;
     cout<<linsearch(first,7)<<endl;
     cout<<reclinsearch(first,7)<<endl;
-    // cout<<betterSearch(first,10)<<endl;
-    // Insert(0,14,first);
+    cout<<betterSearch(first,10)<<endl;
+    Insert(0,14,first);
     insertSortedLL(1,first);
     display(first);
     cout<<endl;
     cout<<deletenode(4,first)<<endl;
+    display(first);
+    reverseRec(NULL,first);
     display(first);
 }
 
